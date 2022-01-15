@@ -7,7 +7,7 @@
  */
 
 #include <vdr/menuitems.h>
-#include "i18n.h"
+#include <vdr/i18n.h>
 #include "setup.h"
 
 cEpgSyncSetup EpgSyncSetup;
@@ -15,7 +15,7 @@ cEpgSyncSetup EpgSyncSetup;
 cEpgSyncSetup::cEpgSyncSetup() {
 	hideMainMenuEntry = 0;
 	serverIp[0] = 0;
-	serverPort = 2001;
+	serverPort = 0;
 	connectAttempts = 1;
 	nowNext = 0;
 	channelByChannel = 0;
@@ -85,13 +85,11 @@ cEpgSyncMenuSetup::cEpgSyncMenuSetup() {
 	channelTypeTexts[ctDVB_S] = "DVB-S";
 	channelTypeTexts[ctDVB_T] = "DVB-T";
 	channelTypeTexts[ctAnalog] = tr("analog");
-#if defined(PLUGINPARAMPATCHVERSNUM) || APIVERSNUM >= 10713
 	channelTypeTexts[ctIptv] = "IP";
-#endif
 
 	Add(new cMenuEditBoolItem(tr("Hide mainmenu entry"), &setupTmp.hideMainMenuEntry));
 	Add(new cMenuEditStrItem(tr("Server IP"), setupTmp.serverIp, 15, ".1234567890"));
-	Add(new cMenuEditIntItem(tr("Server port"), &setupTmp.serverPort, 1, 65535));
+	Add(new cMenuEditIntItem(tr("Server port"), &setupTmp.serverPort, 0, 65535, tr("from svdrpservice")));
 	Add(new cMenuEditIntItem(tr("Connection attempts"), &setupTmp.connectAttempts, 0, 10));
 	Add(new cMenuEditBoolItem(tr("Update \"now\" and \"next\" first"), &setupTmp.nowNext));
 	Add(new cMenuEditBoolItem(tr("Sync channel by channel"), &setupTmp.channelByChannel));

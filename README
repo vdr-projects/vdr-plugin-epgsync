@@ -16,35 +16,23 @@ Requirements:
 -------------
 - plugin svdrpservice >= 0.0.2 (available via http://vdr.schmirler.de)
 
-Known issues:
-------------
-1) VTP does not always deliver the expected events for "LSTE now" and
-"LSTE next".
-
-2) In VDR 1.3.39 up to 1.4.1-2 there's an issue when adding EPG to a
-channel which had no EPG previously. The new EPG entries won't show
-up whenever they are internally addressed "by channel". The complete
-EPG dump contains all entries, so they will become available after
-the next VDR restart.  Usually this problem will affect only those of
-you who start with an empty epg.data and whenever you have added a
-new channel. In the patches subdirectory you will find a fix for this
-problem.
-
 Installation:
 -------------
 - cd VDR/PLUGINS/src
 - tar xzf vdr-epgsync-<VERSION>.tgz
 - ln -sf epgsync-<VERSION> epgsync
 
-If you didn't do that already (otherwise svdrpservice.h is missing):
-- tar xzf vdr-svdrpservice-<VERSION>.tgz
-- ln -sf svdrpservice-<VERSION> svdrpservice
-
 Now compile and install epgsync (and svdrpservice) as usual and add
 both plugins to the script starting your VDR (e.g. runvdr). No options
 required, so simply append:
 
-  -Pepgsync -Psvdrpservice
+  -P epgsync -P svdrpservice
+
+Since svdrpservice-0.0.4 you can already specify the server IP and port
+on the commandline. It will then serve as the default for all plugins
+using svdrpservice:
+
+  -P remoteosd -P 'svdrpservice 192.0.2.1:6419'
 
 Check the svdrphosts.conf (or streamdevhosts.conf) file on the remote
 VDR: The IP of the VDR running epgsync must be listed or otherwise the
@@ -61,8 +49,9 @@ trigger an epgsync at any time. If you don't need this or if you are
 using a keymakro to call the mainmenu entry you can hide it with this
 option.
 - Server IP: Enter the IP of the remote VDR
-- Server port: Defaults to 2001 (SVDRP). If you prefer VTP, its default
-port is 2004
+- Server port: Since VDR 1.7.15 the default port is 6419, before it
+was 2001. If you prefer VTP, its default port is 2004. The default
+value 0 uses the port configured in svdrpservice.
 - Connection attempts: Defines how often epgsync will try to establish
 the connection to the server. For most users the default 1 should be
 sufficient. However if e.g. the client uses WOL to wake the server it

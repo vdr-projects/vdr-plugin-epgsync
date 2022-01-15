@@ -10,7 +10,7 @@
 #include <vdr/thread.h>
 #include <vdr/tools.h>
 #include <vdr/plugin.h>
-#include "../svdrpservice/svdrpservice.h"
+#include "svdrpservice.h"
 
 class cEpgSyncThread: public cThread {
 	private:

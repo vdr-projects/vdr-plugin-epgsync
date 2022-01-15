@@ -1,6 +1,14 @@
 VDR Plugin 'epgsync' Revision History
 -----------------------------------------
 
+2013-06-07: Version 1.0.0
+
+- Updated Makefile for VDR 1.7.36 and dropped compatibility with older VDR
+  versions
+- Updated SVDRP port. Default is now 0 (i.e. use svdrpservice).
+- Added Slovak translation (thanks to Milan Hrala)
+- Included a copy of svdrpservice.h
+
 2010-04-19: Version 0.0.4
 
 - VDR 1.7.13 obsoletes pluginparam-patch. Analog and IPTV now have dedicated

@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.5.7\n"
 "Report-Msgid-Bugs-To: <vdrdev@schmirler.de>\n"
-"POT-Creation-Date: 2009-02-03 11:21+0100\n"
+"POT-Creation-Date: 2013-05-01 00:01+0200\n"
 "PO-Revision-Date: 2009-02-09 19:54+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team:  <vdr@linuxtv.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,6 +37,9 @@ msgstr "IP server"
 msgid "Server port"
 msgstr "Porta server"
 
+msgid "from svdrpservice"
+msgstr "da svdrpservice"
+
 msgid "Connection attempts"
 msgstr "Tentativo connessione"
 
@@ -56,4 +60,3 @@ msgstr "Canali di destinazione"
 
 msgid "EpgSync: Unable to connect to Server"
 msgstr "EpgSync: Impossibile connettersi al server"
-

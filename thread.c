@@ -2,11 +2,11 @@
 #include <vdr/epg.h>
 #include <vdr/channels.h>
 #include <vdr/skins.h>
+#include <vdr/i18n.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
-#include "i18n.h"
 #include "setup.h"
 #include "thread.h"
 
@@ -29,29 +29,14 @@ bool IsType(const cChannel* Channel, eChannelTypes Type)
 				return Type == ctAnalog;
 			else
 				return Type == ctDVB_C;
-#if APIVERSNUM >= 10713
 		case 'I':
 			return Type == ctIptv;
-#endif
-#if defined(PLUGINPARAMPATCHVERSNUM)
-		case 'P':
-			// Patched VDR - PluginParam() contains ID of the
-			// plugin which provides the channel
-			if (strncasecmp(Channel->PluginParam(), "PVRINPUT|", 9) == 0)
-				return Type == ctAnalog;
-			else if (strncasecmp(Channel->PluginParam(), "IPTV|", 5) == 0)
-				return Type == ctIptv;
-			else
-				return false;
-#endif
 		case 'S':
 			return Type == ctDVB_S;
 		case 'T':
 			return Type == ctDVB_T;
-#if APIVERSNUM >= 10713
 		case 'V':
 			return Type == ctAnalog;
-#endif
 		default:
 			return false;
 	}
