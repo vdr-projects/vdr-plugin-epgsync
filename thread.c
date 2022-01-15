@@ -12,6 +12,8 @@
 #define EPGSYNC_SLEEPMS 30
 
 void cEpgSyncThread::Action() {
+	SetPriority(15);
+
 	plugin = cPluginManager::GetPlugin("svdrpservice");
 	if (!plugin) {
 		esyslog("EpgSync: Plugin svdrpservice not available");
@@ -86,7 +88,7 @@ bool cEpgSyncThread::CmdLSTE(FILE *f, const char *Arg) {
 	cLine *line = cmd.reply.First();
 	if (cmd.responseCode != 215 || !line) {
 	        esyslog("EpgSync: LSTE error %hu %s", cmd.responseCode,
-				line->Text() ? line->Text() : "");
+				line ? line->Text() : "");
 		return false;
 	}
 	while (cmd.reply.Next(line)) {
