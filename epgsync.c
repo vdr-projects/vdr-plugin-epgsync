@@ -11,9 +11,9 @@
 #include "setup.h"
 #include "thread.h"
 
-static const char *VERSION        = "0.0.2";
-static const char *DESCRIPTION    = "Import EPG of an other VDR";
-static const char *MAINMENUENTRY  = "Synchronize EPG";
+static const char *VERSION        = "0.0.3";
+static const char *DESCRIPTION    = trNOOP("Import EPG of an other VDR");
+static const char *MAINMENUENTRY  = trNOOP("Synchronize EPG");
 
 class cPluginEpgsync : public cPlugin {
 private:
@@ -76,7 +76,9 @@ bool cPluginEpgsync::Initialize(void)
 bool cPluginEpgsync::Start(void)
 {
   // Start any background activities the plugin shall perform.
+#if VDRVERSNUM < 10507
   RegisterI18n(Phrases);
+#endif
   if (EpgSyncSetup.syncOnStart) {
 	EpgSyncThread->Start();
   }

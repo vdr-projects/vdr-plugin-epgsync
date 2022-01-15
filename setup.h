@@ -11,6 +11,15 @@
 
 #define MAX_IP_LENGTH 16
 
+enum eRedirectChannelModes { rcmId, rcmIdName, rcmNameId, rcm_Count };
+enum eChannelTypes {
+	ctAll, ctDVB_C, ctDVB_S, ctDVB_T, ctAnalog,
+#ifdef PLUGINPARAMPATCHVERSNUM
+	ctIptv,
+#endif
+	ct_Count
+	};
+
 struct cEpgSyncSetup {
 	int hideMainMenuEntry;
 	char serverIp[MAX_IP_LENGTH];
@@ -19,6 +28,8 @@ struct cEpgSyncSetup {
 	int nowNext;
 	int channelByChannel;
 	int syncOnStart;
+	int redirectChannels;
+	int channelTypes;
 
 	bool Parse(const char *Name, const char *Value);
 	cEpgSyncSetup& operator=(const cEpgSyncSetup &Setup);
@@ -30,6 +41,8 @@ extern cEpgSyncSetup EpgSyncSetup;
 class cEpgSyncMenuSetup: public cMenuSetupPage {
 	private:
 		cEpgSyncSetup setupTmp;
+		const char* redirectChannelsTexts[rcm_Count];
+		const char* channelTypeTexts[ct_Count];
 	protected:
 		virtual void Store(void);
 	public:

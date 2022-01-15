@@ -1,0 +1,58 @@
+# VDR plugin language source file.
+# Copyright (C) 2007 Klaus Schmidinger <kls@cadsoft.de>
+# This file is distributed under the same license as the VDR package.
+# Klaus Schmidinger <kls@cadsoft.de>, 2000
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: VDR 1.5.7\n"
+"Report-Msgid-Bugs-To: <vdrdev@schmirler.de>\n"
+"POT-Creation-Date: 2009-02-03 11:21+0100\n"
+"PO-Revision-Date: 2009-02-03 11:23+0100\n"
+"Last-Translator: Frank Schmirler <vdrdev@schmirler.de>\n"
+"Language-Team: <vdr@linuxtv.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Import EPG of an other VDR"
+msgstr "EPG eines anderen VDR importieren"
+
+msgid "Synchronize EPG"
+msgstr "EPG synchronisieren"
+
+msgid "all"
+msgstr "alle"
+
+msgid "analog"
+msgstr "analog"
+
+msgid "Hide mainmenu entry"
+msgstr "Hauptmenüeintrag verstecken"
+
+msgid "Server IP"
+msgstr "Server IP"
+
+msgid "Server port"
+msgstr "Server Port"
+
+msgid "Connection attempts"
+msgstr "Verbindungsversuche"
+
+msgid "Update \"now\" and \"next\" first"
+msgstr "\"Jetzt\" und \"Nächste\" zuerst"
+
+msgid "Sync channel by channel"
+msgstr "Kanalweise synchronisieren"
+
+msgid "EPG sync on startup"
+msgstr "EPG sync beim Starten"
+
+msgid "Map channels by"
+msgstr "Kanäle zuordnen nach"
+
+msgid "Target channels"
+msgstr "Ziel-Kanäle"
+
+msgid "EpgSync: Unable to connect to Server"
+msgstr "EpgSync: Verbindung zum Server fehlgeschlagen"

@@ -68,10 +68,22 @@ the connection to the server. For most users the default 1 should be
 sufficient. However if e.g. the client uses WOL to wake the server it
 might not be available immediately. The first retry will be after 1
 second. The delay will be doubled after each attempt.
-- Update "now" and "next" first: Enable this option if you want to import the "What's on now/next" entries first. It uses the SVDRP commands "LSTE now" and "LSTE next". Especially useful for those who start with an empty epg.data file.
+- Update "now" and "next" first: Enable this option if you want to
+import the "What's on now/next" entries first. It uses the SVDRP
+commands "LSTE now" and "LSTE next". Especially useful for those who
+start with an empty epg.data file.
 - Sync channel by channel: Determines how the EPG is downloaded. See
 notes below.
-- EPG sync on startup: Start syncinc when the plugin is started.
+- EPG sync on startup: Start syncing when the plugin is started.
+- Map channels by: mode "ID", the default, simply copies the EPG data
+it receives, effectively mapping channels by their channel ID. In
+"ID, Name" mode, if no local channel corresponds to a channel ID from
+EPG, an attempt is made to find the channel by name. Finally in
+"Name, ID" mode, epgsync searches for a channel by name, prefering
+channels with a different ID. You can use this mode to copy EPG to
+analogue channels. Note: When looking up a channel by name, case is
+ignored. Both, the long and the short channel names are considered.
+- Target channels: Restrict the EPG import to certain channel types.
 
 Recommended settings
 --------------------

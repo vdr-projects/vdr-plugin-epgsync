@@ -11,6 +11,54 @@
 
 #define EPGSYNC_SLEEPMS 30
 
+bool IsType(const cChannel* Channel, eChannelTypes Type)
+{
+	if (!Channel)
+		return false;
+
+	if (Type == ctAll)
+		return true;
+
+	cString source = cSource::ToString(Channel->Source());
+	char c = ((const char*) source)[0];
+	switch (c) {
+		case 'C':
+			// analogtv-, pvrinput-, pvrusb2-plugin
+			if (Channel->Ca() >= 0xa0 && Channel->Ca() <= 0xa2)
+				return Type == ctAnalog;
+			else
+				return Type == ctDVB_C;
+#ifdef PLUGINPARAMPATCHVERSNUM
+		case 'P':
+			// Patched VDR - PluginParam() contains ID of the
+			// plugin which provides the channel
+			if (strncasecmp(Channel->PluginParam(), "PVRINPUT|", 9) == 0)
+				return Type == ctAnalog;
+			else if (strncasecmp(Channel->PluginParam(), "IPTV|", 5) == 0)
+				return Type == ctIptv;
+			else
+				return false;
+#endif
+		case 'S':
+			return Type == ctDVB_S;
+		case 'T':
+			return Type == ctDVB_T;
+		default:
+			return false;
+	}
+}
+
+cChannel *GetChannelByName(const char* Name, const cChannel *IgnoreChannel = NULL, eChannelTypes Type = ctAll)
+{
+	for (cChannel *channel = Channels.First(); channel; channel = Channels.Next(channel)) {
+		if (strcasecmp(Name, channel->Name()) == 0 || strcasecmp(Name, channel->ShortName()) == 0) {
+			if (IsType(channel, Type) && channel != IgnoreChannel)
+				return channel;
+		}
+	}
+	return NULL;
+}
+
 void cEpgSyncThread::Action() {
 	SetPriority(15);
 
@@ -78,7 +126,7 @@ void cEpgSyncThread::Action() {
 
 bool cEpgSyncThread::CmdLSTE(FILE *f, const char *Arg) {
 	SvdrpCommand_v1_0 cmd;
-	cmd.command = Arg ? cString::sprintf("LSTE %s\r\n", Arg) : "LSTE\r\n";
+	cmd.command = cString::sprintf("LSTE %s\r\n", Arg ? Arg : "");
 	cmd.handle = svdrp.handle;
 
 	if (!Running())
@@ -91,11 +139,54 @@ bool cEpgSyncThread::CmdLSTE(FILE *f, const char *Arg) {
 				line ? line->Text() : "");
 		return false;
 	}
+
+	const cChannel* targetChannel = NULL;
 	while (cmd.reply.Next(line)) {
-		if (fputs(line->Text(), f) < 0 || fputs("\n", f) < 0) {
-			LOG_ERROR;
-			return false;
-		};
+		const char* s = line->Text();
+		if (*s == 'C') {
+			// new channel begins
+			targetChannel = NULL;
+
+			const char* p = skipspace(s + 1);
+			cChannel *c = Channels.GetByChannelID(tChannelID::FromString(p));
+			bool cOk = IsType(c, (eChannelTypes) EpgSyncSetup.channelTypes);
+
+			if (cOk && EpgSyncSetup.redirectChannels != rcmNameId) {
+				// got acceptable channel by ID
+				targetChannel = c;
+			}
+			else if (EpgSyncSetup.redirectChannels != rcmId) {
+				// get channel by name
+				p = strchr(p, ' ');
+				if (p) {
+					// got channel name
+					p = skipspace(p);
+					targetChannel = GetChannelByName(p, c, (eChannelTypes) EpgSyncSetup.channelTypes);
+				}
+				// fallback to channel with original ID
+				if (!targetChannel && cOk)
+					targetChannel = c;
+			}
+
+			if (targetChannel) {
+				// generate channel header
+				if (fputs("C ", f) < 0 ||
+						fputs(targetChannel->GetChannelID().ToString(), f) < 0 ||
+						fputs(" ", f) < 0 ||
+						fputs(targetChannel->Name(), f) < 0 ||
+						fputs("\n", f) < 0) {
+					LOG_ERROR;
+					return false;
+				}
+			}
+		}
+		else if (targetChannel) {
+			// copy channel data
+			if (fputs(s, f) < 0 || fputs("\n", f) < 0) {
+				LOG_ERROR;
+				return false;
+			}
+		}
 		line = cmd.reply.Next(line);
 	}
 	return Running();

@@ -20,6 +20,8 @@ cEpgSyncSetup::cEpgSyncSetup() {
 	nowNext = 0;
 	channelByChannel = 0;
 	syncOnStart = 0;
+	redirectChannels = rcmId;
+	channelTypes = ctAll;
 }
 
 cEpgSyncSetup& cEpgSyncSetup::operator=(const cEpgSyncSetup &Setup) {
@@ -30,6 +32,8 @@ cEpgSyncSetup& cEpgSyncSetup::operator=(const cEpgSyncSetup &Setup) {
 	nowNext = Setup.nowNext;
 	channelByChannel = Setup.channelByChannel;
 	syncOnStart = Setup.syncOnStart;
+	redirectChannels = Setup.redirectChannels;
+	channelTypes = Setup.channelTypes;
 	return *this;
 }
 
@@ -48,6 +52,10 @@ bool cEpgSyncSetup::Parse(const char *Name, const char *Value) {
 		channelByChannel = atoi(Value);
 	else if (!strcasecmp(Name, "SyncOnStart"))
 		syncOnStart = atoi(Value);
+	else if (!strcasecmp(Name, "RedirectChannels"))
+		redirectChannels = atoi(Value);
+	else if (!strcasecmp(Name, "ChannelTypes"))
+		channelTypes = atoi(Value);
 	else
 		return false;
 	return true;
@@ -61,11 +69,26 @@ void cEpgSyncMenuSetup::Store() {
 	SetupStore("NowNext", setupTmp.nowNext);
 	SetupStore("ChannelByChannel", setupTmp.channelByChannel);
 	SetupStore("SyncOnStart", setupTmp.syncOnStart);
+	SetupStore("RedirectChannels", setupTmp.redirectChannels);
+	SetupStore("ChannelTypes", setupTmp.channelTypes);
 	EpgSyncSetup = setupTmp;
 }
 
 cEpgSyncMenuSetup::cEpgSyncMenuSetup() {
 	setupTmp = EpgSyncSetup;
+	redirectChannelsTexts[rcmId] = "ID";
+	redirectChannelsTexts[rcmIdName] = strdup(cString::sprintf("ID, %s", trVDR("Name")));
+	redirectChannelsTexts[rcmNameId] = strdup(cString::sprintf("%s, ID", trVDR("Name")));
+	
+	channelTypeTexts[ctAll] = tr("all");
+	channelTypeTexts[ctDVB_C] = "DVB-C";
+	channelTypeTexts[ctDVB_S] = "DVB-S";
+	channelTypeTexts[ctDVB_T] = "DVB-T";
+	channelTypeTexts[ctAnalog] = tr("analog");
+#ifdef PLUGINPARAMPATCHVERSNUM
+	channelTypeTexts[ctIptv] = "IP";
+#endif
+
 	Add(new cMenuEditBoolItem(tr("Hide mainmenu entry"), &setupTmp.hideMainMenuEntry));
 	Add(new cMenuEditStrItem(tr("Server IP"), setupTmp.serverIp, 15, ".1234567890"));
 	Add(new cMenuEditIntItem(tr("Server port"), &setupTmp.serverPort, 1, 65535));
@@ -73,7 +96,11 @@ cEpgSyncMenuSetup::cEpgSyncMenuSetup() {
 	Add(new cMenuEditBoolItem(tr("Update \"now\" and \"next\" first"), &setupTmp.nowNext));
 	Add(new cMenuEditBoolItem(tr("Sync channel by channel"), &setupTmp.channelByChannel));
 	Add(new cMenuEditBoolItem(tr("EPG sync on startup"), &setupTmp.syncOnStart));
+	Add(new cMenuEditStraItem(tr("Map channels by"), &setupTmp.redirectChannels, rcm_Count, redirectChannelsTexts));
+	Add(new cMenuEditStraItem(tr("Target channels"), &setupTmp.channelTypes, ct_Count, channelTypeTexts));
 }
 
 cEpgSyncMenuSetup::~cEpgSyncMenuSetup() {
+	free((void *) redirectChannelsTexts[rcmIdName]);
+	free((void *) redirectChannelsTexts[rcmNameId]);
 }
