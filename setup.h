@@ -14,7 +14,7 @@
 enum eRedirectChannelModes { rcmId, rcmIdName, rcmNameId, rcm_Count };
 enum eChannelTypes {
 	ctAll, ctDVB_C, ctDVB_S, ctDVB_T, ctAnalog,
-#ifdef PLUGINPARAMPATCHVERSNUM
+#if defined(PLUGINPARAMPATCHVERSNUM) || APIVERSNUM >= 10713
 	ctIptv,
 #endif
 	ct_Count

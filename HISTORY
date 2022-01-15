@@ -1,6 +1,18 @@
 VDR Plugin 'epgsync' Revision History
 -----------------------------------------
 
+2010-04-19: Version 0.0.4
+
+- VDR 1.7.13 obsoletes pluginparam-patch. Analog and IPTV now have dedicated
+  channel source values.
+- Mapping channels by name failed when syncing in channel-by-channel mode
+  and the channels to be imported were not part of the local channel list.
+  (reported by tivi2@vdrportal)
+- Don't log LSTE errors caused by remote channels which are unknown or don't
+  provide a schedule (reported by fnu@vdrportal)
+- Abort faster when stopping epgsync thread
+- Fixed missing translations in vdr 1.4.x
+
 2009-02-10: Version 0.0.3
 
 - New setup option for filtering destination channels by channel type.

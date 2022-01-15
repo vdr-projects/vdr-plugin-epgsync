@@ -118,10 +118,18 @@ other plugins will win - which ever is first. The other might timeout.
 "Sync channel by channel: yes" is the "economy mode". It takes
 considerably longer but the connection can be shared with other local
 plugins. I had no problem running e.g. remoteosd at the same time.
-In this mode, epgsync loops through all channels starting with the
+
+It depends on "Map channels by", how this mode actually works: If set to
+"ID", epgsync loops through the local channel list, starting with the
 first. If a schedule is available for a channel "LSTE <channel id>"
 is sent, the reply is processed and the thread sleeps for a few millis.
 Note that in this mode epgsync won't import the EPG of a channel
 which does not have a local schedule. To always get the EPG of all
 channels you should configure "Update now and next first: yes". This
 will import the results of "LSTE now" and "LSTE next" beforehand.
+
+If "Map channels by" is not set to "ID", epgsync sends the "LSTC" command
+to get the remote channel list. For each channel in this list, epgsync
+sends an "LSTE <channel number>", processes the reply and sleeps for a few
+millis. So in the end epgsync imports the EPG of all remote channels. It
+is not necessary to enable "Update now and next first".

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <string.h>
 #include "i18n.h"
 #include "setup.h"
 #include "thread.h"
@@ -28,7 +29,11 @@ bool IsType(const cChannel* Channel, eChannelTypes Type)
 				return Type == ctAnalog;
 			else
 				return Type == ctDVB_C;
-#ifdef PLUGINPARAMPATCHVERSNUM
+#if APIVERSNUM >= 10713
+		case 'I':
+			return Type == ctIptv;
+#endif
+#if defined(PLUGINPARAMPATCHVERSNUM)
 		case 'P':
 			// Patched VDR - PluginParam() contains ID of the
 			// plugin which provides the channel
@@ -43,6 +48,10 @@ bool IsType(const cChannel* Channel, eChannelTypes Type)
 			return Type == ctDVB_S;
 		case 'T':
 			return Type == ctDVB_T;
+#if APIVERSNUM >= 10713
+		case 'V':
+			return Type == ctAnalog;
+#endif
 		default:
 			return false;
 	}
@@ -98,20 +107,55 @@ void cEpgSyncThread::Action() {
 
 	if (EpgSyncSetup.channelByChannel) {
 		// Get channel by channel
-		cSchedulesLock *lock = NULL;
-		for (cChannel *channel = Channels.First(); channel;
-				channel = Channels.Next(channel)) {
-			if (!lock)
-				lock = new cSchedulesLock();
-			if (cSchedules::Schedules(*lock)->GetSchedule(channel)) {
-				DELETENULL(lock);
-				if (CmdLSTE(f, *channel->GetChannelID().ToString())) {
-					AddSchedule(f);
+		if (EpgSyncSetup.redirectChannels == rcmId) {
+			// Direct import, no mapping:
+			// loop through local channels, get channels by ID
+			cSchedulesLock *lock = NULL;
+			for (cChannel *channel = Channels.First(); channel && Running();
+					channel = Channels.Next(channel)) {
+				if (!lock)
+					lock = new cSchedulesLock();
+				if (cSchedules::Schedules(*lock)->GetSchedule(channel)) {
+					DELETENULL(lock);
+					if (CmdLSTE(f, *channel->GetChannelID().ToString())) {
+						AddSchedule(f);
+					}
+					cCondWait::SleepMs(EPGSYNC_SLEEPMS);
 				}
-				cCondWait::SleepMs(EPGSYNC_SLEEPMS);
+			}
+			DELETENULL(lock);
+		}
+		else {
+			// Map channels by name:
+			// loop through remote channel list, get channels by number
+			SvdrpCommand_v1_0 cmd;
+			cmd.command = "LSTC\r\n";
+			cmd.handle = svdrp.handle;
+
+			plugin->Service("SvdrpCommand-v1.0", &cmd);
+
+			if (cmd.responseCode == 250) {
+				for (cLine *line = cmd.reply.First(); line && Running();
+						line = cmd.reply.Next(line)) {
+					const char* s = line->Text();
+					const char* p = strchr(s, ' ');
+					if (p && p > s) {
+						if (CmdLSTE(f, cString::sprintf("%.*s", (int)(p - s), s))) {
+							AddSchedule(f);
+						}
+						cCondWait::SleepMs(EPGSYNC_SLEEPMS);
+					}
+					else {
+	        				esyslog("EpgSync: LSTC returned channel without number: %s", line->Text());
+					}
+				}
+			}
+			else {
+				cLine *line = cmd.reply.First();
+	        		esyslog("EpgSync: LSTC error %hu %s", cmd.responseCode,
+					line ? line->Text() : "");
 			}
 		}
-		DELETENULL(lock);
 	}
 	else {
 		// Get complete epg
@@ -134,7 +178,11 @@ bool cEpgSyncThread::CmdLSTE(FILE *f, const char *Arg) {
 
 	plugin->Service("SvdrpCommand-v1.0", &cmd);
 	cLine *line = cmd.reply.First();
-	if (cmd.responseCode != 215 || !line) {
+	if (cmd.responseCode == 550) {
+		// "Channel not defined" or "No schedule found"
+		return false;
+	}
+	else if (cmd.responseCode != 215 || !line) {
 	        esyslog("EpgSync: LSTE error %hu %s", cmd.responseCode,
 				line ? line->Text() : "");
 		return false;

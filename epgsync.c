@@ -11,7 +11,7 @@
 #include "setup.h"
 #include "thread.h"
 
-static const char *VERSION        = "0.0.3";
+static const char *VERSION        = "0.0.4";
 static const char *DESCRIPTION    = trNOOP("Import EPG of an other VDR");
 static const char *MAINMENUENTRY  = trNOOP("Synchronize EPG");
 

@@ -85,7 +85,7 @@ cEpgSyncMenuSetup::cEpgSyncMenuSetup() {
 	channelTypeTexts[ctDVB_S] = "DVB-S";
 	channelTypeTexts[ctDVB_T] = "DVB-T";
 	channelTypeTexts[ctAnalog] = tr("analog");
-#ifdef PLUGINPARAMPATCHVERSNUM
+#if defined(PLUGINPARAMPATCHVERSNUM) || APIVERSNUM >= 10713
 	channelTypeTexts[ctIptv] = "IP";
 #endif
 

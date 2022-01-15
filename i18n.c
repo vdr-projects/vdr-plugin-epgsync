@@ -111,7 +111,7 @@ const tI18nPhrase Phrases[] = {
   { "Hide mainmenu entry",
     "Hauptmenüeintrag verstecken",
     "",
-    "Nascondi voce nel menu principale",
+    "Nascondi voce menu principale",
     "",
     "",
     "",
@@ -181,7 +181,7 @@ const tI18nPhrase Phrases[] = {
   { "Map channels by",
     "Kanäle zuordnen nach",
     "",
-    "",
+    "Mappa canali per",
     "",
     "",
     "",
@@ -353,10 +353,115 @@ const tI18nPhrase Phrases[] = {
     "",
 #endif
   },
+  { "Target channels",
+    "Ziel-Kanäle",
+    "",
+    "Canali di destinazione",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+#if VDRVERSNUM >= 10302
+    "",
+#endif
+#if VDRVERSNUM >= 10307
+    "",
+#endif
+#if VDRVERSNUM >= 10313
+    "",
+#endif
+#if VDRVERSNUM >= 10316
+    "",
+#endif
+#if VDRVERSNUM >= 10342
+    "",
+#endif
+#if VDRVERSNUM >= 10502
+    "",
+#endif
+  },
   { "Update \"now\" and \"next\" first",
     "\"Jetzt\" und \"Nächste\" zuerst",
     "",
-    "Aggiorna prima \"adesso\" e \"prossimo\"",
+    "Agg. prima Adesso/Prossimi",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+#if VDRVERSNUM >= 10302
+    "",
+#endif
+#if VDRVERSNUM >= 10307
+    "",
+#endif
+#if VDRVERSNUM >= 10313
+    "",
+#endif
+#if VDRVERSNUM >= 10316
+    "",
+#endif
+#if VDRVERSNUM >= 10342
+    "",
+#endif
+#if VDRVERSNUM >= 10502
+    "",
+#endif
+  },
+  { "all",
+    "alle",
+    "",
+    "tutti",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+#if VDRVERSNUM >= 10302
+    "",
+#endif
+#if VDRVERSNUM >= 10307
+    "",
+#endif
+#if VDRVERSNUM >= 10313
+    "",
+#endif
+#if VDRVERSNUM >= 10316
+    "",
+#endif
+#if VDRVERSNUM >= 10342
+    "",
+#endif
+#if VDRVERSNUM >= 10502
+    "",
+#endif
+  },
+  { "analog",
+    "analog",
+    "",
+    "analogici",
     "",
     "",
     "",
