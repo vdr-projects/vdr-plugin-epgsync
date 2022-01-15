@@ -26,6 +26,7 @@ struct cEpgSyncSetup {
 	int nowNext;
 	int channelByChannel;
 	int syncOnStart;
+	int everyHours;
 	int redirectChannels;
 	int channelTypes;
 

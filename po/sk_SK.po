@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-epgsync 0.0.4\n"
 "Report-Msgid-Bugs-To: <vdrdev@schmirler.de>\n"
-"POT-Creation-Date: 2013-05-01 00:01+0200\n"
+"POT-Creation-Date: 2014-03-13 10:47+0100\n"
 "PO-Revision-Date: 2013-03-12 23:39+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak\n"
@@ -54,6 +54,9 @@ msgstr "Synchronyzova» kanál podµa kanála"
 
 msgid "EPG sync on startup"
 msgstr "Synchronizova» EPG pri ¹tarte"
+
+msgid "EPG sync timeout (h)"
+msgstr "Interval EPG synchronizácie (h)"
 
 msgid "Map channels by"
 msgstr "Mapova» kanály podµa"

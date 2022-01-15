@@ -20,6 +20,7 @@ cEpgSyncSetup::cEpgSyncSetup() {
 	nowNext = 0;
 	channelByChannel = 0;
 	syncOnStart = 0;
+	everyHours = 0;
 	redirectChannels = rcmId;
 	channelTypes = ctAll;
 }
@@ -32,6 +33,7 @@ cEpgSyncSetup& cEpgSyncSetup::operator=(const cEpgSyncSetup &Setup) {
 	nowNext = Setup.nowNext;
 	channelByChannel = Setup.channelByChannel;
 	syncOnStart = Setup.syncOnStart;
+	everyHours = Setup.everyHours;
 	redirectChannels = Setup.redirectChannels;
 	channelTypes = Setup.channelTypes;
 	return *this;
@@ -52,6 +54,8 @@ bool cEpgSyncSetup::Parse(const char *Name, const char *Value) {
 		channelByChannel = atoi(Value);
 	else if (!strcasecmp(Name, "SyncOnStart"))
 		syncOnStart = atoi(Value);
+	else if (!strcasecmp(Name, "EveryHours"))
+		everyHours = atoi(Value);
 	else if (!strcasecmp(Name, "RedirectChannels"))
 		redirectChannels = atoi(Value);
 	else if (!strcasecmp(Name, "ChannelTypes"))
@@ -69,6 +73,7 @@ void cEpgSyncMenuSetup::Store() {
 	SetupStore("NowNext", setupTmp.nowNext);
 	SetupStore("ChannelByChannel", setupTmp.channelByChannel);
 	SetupStore("SyncOnStart", setupTmp.syncOnStart);
+	SetupStore("EveryHours", setupTmp.everyHours);
 	SetupStore("RedirectChannels", setupTmp.redirectChannels);
 	SetupStore("ChannelTypes", setupTmp.channelTypes);
 	EpgSyncSetup = setupTmp;
@@ -94,6 +99,7 @@ cEpgSyncMenuSetup::cEpgSyncMenuSetup() {
 	Add(new cMenuEditBoolItem(tr("Update \"now\" and \"next\" first"), &setupTmp.nowNext));
 	Add(new cMenuEditBoolItem(tr("Sync channel by channel"), &setupTmp.channelByChannel));
 	Add(new cMenuEditBoolItem(tr("EPG sync on startup"), &setupTmp.syncOnStart));
+	Add(new cMenuEditIntItem(tr("EPG sync timeout (h)"), &setupTmp.everyHours, 0, INT_MAX, trVDR("off")));
 	Add(new cMenuEditStraItem(tr("Map channels by"), &setupTmp.redirectChannels, rcm_Count, redirectChannelsTexts));
 	Add(new cMenuEditStraItem(tr("Target channels"), &setupTmp.channelTypes, ct_Count, channelTypeTexts));
 }

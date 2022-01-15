@@ -11,16 +11,19 @@
 #include <vdr/tools.h>
 #include <vdr/plugin.h>
 #include "svdrpservice.h"
+#include <time.h>
 
 class cEpgSyncThread: public cThread {
 	private:
 		cPlugin *plugin;
 		SvdrpConnection_v1_0 svdrp;
+		time_t last;
 	protected:
 		virtual void Action();
 		bool CmdLSTE(FILE *f, const char *Arg = NULL);
 		void AddSchedule(FILE *f);
 	public:
+		time_t LastRun() const { return last; };
 		cEpgSyncThread();
 		virtual ~cEpgSyncThread();
 };

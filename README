@@ -32,7 +32,7 @@ Since svdrpservice-0.0.4 you can already specify the server IP and port
 on the commandline. It will then serve as the default for all plugins
 using svdrpservice:
 
-  -P remoteosd -P 'svdrpservice 192.0.2.1:6419'
+  -P epgsync -P 'svdrpservice 192.0.2.1:6419'
 
 Check the svdrphosts.conf (or streamdevhosts.conf) file on the remote
 VDR: The IP of the VDR running epgsync must be listed or otherwise the
@@ -40,39 +40,66 @@ connection will be refused.
 
 Configuration:
 --------------
-Before you can connect you have to configure the IP address of the
-remote VDR. So you have to enter the plugin's setup menu first. It
-offers the following options:
+Before you can connect, your local VDR must know the IP address of the
+remote VDR. Either configure a default IP in the svdrpservice plugin or
+enter it in epgsync's setup.
 
-- Hide mainmenu entry: The mainmenu entry of epgsync allows you to
-trigger an epgsync at any time. If you don't need this or if you are
-using a keymakro to call the mainmenu entry you can hide it with this
-option.
-- Server IP: Enter the IP of the remote VDR
-- Server port: Since VDR 1.7.15 the default port is 6419, before it
-was 2001. If you prefer VTP, its default port is 2004. The default
-value 0 uses the port configured in svdrpservice.
-- Connection attempts: Defines how often epgsync will try to establish
-the connection to the server. For most users the default 1 should be
-sufficient. However if e.g. the client uses WOL to wake the server it
-might not be available immediately. The first retry will be after 1
-second. The delay will be doubled after each attempt.
-- Update "now" and "next" first: Enable this option if you want to
-import the "What's on now/next" entries first. It uses the SVDRP
-commands "LSTE now" and "LSTE next". Especially useful for those who
-start with an empty epg.data file.
-- Sync channel by channel: Determines how the EPG is downloaded. See
-notes below.
-- EPG sync on startup: Start syncing when the plugin is started.
-- Map channels by: mode "ID", the default, simply copies the EPG data
-it receives, effectively mapping channels by their channel ID. In
-"ID, Name" mode, if no local channel corresponds to a channel ID from
-EPG, an attempt is made to find the channel by name. Finally in
-"Name, ID" mode, epgsync searches for a channel by name, prefering
-channels with a different ID. You can use this mode to copy EPG to
-analogue channels. Note: When looking up a channel by name, case is
-ignored. Both, the long and the short channel names are considered.
-- Target channels: Restrict the EPG import to certain channel types.
+The plugin setup offers the following options:
+
+- Hide mainmenu entry
+The mainmenu entry of epgsync allows you to trigger an epgsync at any
+time. If you don't need this or if you are using a keymakro to call the
+mainmenu entry you can hide it with this option.
+
+- Server IP
+P address of SVDRP server. Leave empty or enter "0.0.0.0" if you want
+to use the default IP configured in the svdrpservice plugin.
+
+- Server port
+SVDRP port on server. Since VDR 1.7.15 the default port is 6419, before
+it was 2001. If you prefer VTP, its default port is 2004. The special
+value 0 uses the default port configured in svdrpservice.
+
+- Connection attempts
+Defines how often epgsync will try to establish the connection to the
+server. For most users the default 1 should be sufficient. However if
+e.g. the client uses WOL to wake the server it might not be available
+immediately. The first retry will be after 1 second. The delay will be
+doubled after each attempt.
+
+- Update "now" and "next" first
+Enable this option if you want to import the "What's on now/next"
+entries first. It uses the SVDRP commands "LSTE now" and "LSTE next".
+Especially useful for those who start with an empty epg.data file.
+
+- Sync channel by channel
+Determines how the EPG is downloaded. See notes below.
+
+- EPG sync on startup
+Start syncing when the plugin is started.
+
+- EPG sync timeout (h)
+Perform an epgsync regularely when enabled.  You will need this option
+only in special cases. As long as your client syncs on startup
+regularely and receives EPG information via DVB stream (e.g. using
+streamdev's "Filter Streaming" option) you should be fine without this
+option. This is not an exact timeout but a minimum delay in hours
+between two syncs. Every successful manually or SVDRP triggered sync
+will reset the timeout. This setting won't trigger a sync right after
+plugin start. Use the previous option instead.
+
+- Map channels by
+Mode "ID", the default, simply copies the EPG data it receives,
+effectively mapping channels by their channel ID. In "ID, Name" mode,
+if no local channel corresponds to a channel ID from EPG, an attempt
+is made to find the channel by name. Finally in "Name, ID" mode,
+epgsync searches for a channel by name, prefering channels with a
+different ID. You can use this mode to copy EPG to analogue channels.
+Note: When looking up a channel by name, case is ignored. Both, the
+long and the short channel names are considered.
+
+- Target channels
+Restrict the EPG import to certain channel types.
 
 Recommended settings
 --------------------
@@ -122,3 +149,8 @@ to get the remote channel list. For each channel in this list, epgsync
 sends an "LSTE <channel number>", processes the reply and sleeps for a few
 millis. So in the end epgsync imports the EPG of all remote channels. It
 is not necessary to enable "Update now and next first".
+
+SVDRP
+-----
+You can trigger an EPG sync with the following SVDRP command:
+  PLUG epgsync SYNC

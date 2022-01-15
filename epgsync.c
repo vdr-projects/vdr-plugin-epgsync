@@ -11,7 +11,7 @@
 #include "setup.h"
 #include "thread.h"
 
-static const char *VERSION        = "1.0.0";
+static const char *VERSION        = "1.0.1";
 static const char *DESCRIPTION    = trNOOP("Import EPG of an other VDR");
 static const char *MAINMENUENTRY  = trNOOP("Synchronize EPG");
 
@@ -91,6 +91,11 @@ void cPluginEpgsync::Stop(void)
 void cPluginEpgsync::Housekeeping(void)
 {
   // Perform any cleanup or other regular tasks.
+  if (EpgSyncSetup.everyHours && !EpgSyncThread->Active() &&
+		time(NULL) - EpgSyncThread->LastRun() > EpgSyncSetup.everyHours * 3600) {
+  	isyslog("Starting scheduled EpgSync");
+	EpgSyncThread->Start();
+  }
 }
 
 void cPluginEpgsync::MainThreadHook(void)
@@ -133,12 +138,26 @@ bool cPluginEpgsync::Service(const char *Id, void *Data)
 const char **cPluginEpgsync::SVDRPHelpPages(void)
 {
   // Return help text for SVDRP commands this plugin implements
-  return NULL;
+  static const char *HelpPages[] = {
+     "SYNC\n    Start EpgSync\n",
+     NULL
+  };
+  return HelpPages;
 }
 
 cString cPluginEpgsync::SVDRPCommand(const char *Command, const char *Option, int &ReplyCode)
 {
   // Process SVDRP commands this plugin implements
+  if (!strcasecmp(Command, "SYNC")) {
+     if (EpgSyncThread->Active()) {
+        ReplyCode = 950;
+        return "EpgSync already active";
+     }
+     else {
+        EpgSyncThread->Start();
+        return "EpgSync started";
+     }
+  }
   return NULL;
 }
 

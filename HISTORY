@@ -1,6 +1,10 @@
 VDR Plugin 'epgsync' Revision History
 -----------------------------------------
 
+- Updated Slovak translation (thanks to Milan Hrala)
+- New option for periodic sync (suggested by GTRDRIVER@vdrportal)
+- Added SVDRP command to trigger sync (suggested by no sleep@vdrportal)
+
 2013-06-07: Version 1.0.0
 
 - Updated Makefile for VDR 1.7.36 and dropped compatibility with older VDR

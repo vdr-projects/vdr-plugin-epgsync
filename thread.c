@@ -151,6 +151,7 @@ void cEpgSyncThread::Action() {
 
 	plugin->Service("SvdrpConnection-v1.0", &svdrp);
 	cSchedules::Cleanup(true);
+	last = time(NULL);
 }
 
 bool cEpgSyncThread::CmdLSTE(FILE *f, const char *Arg) {
@@ -239,6 +240,9 @@ void cEpgSyncThread::AddSchedule(FILE *f) {
 
 cEpgSyncThread::cEpgSyncThread(): cThread("epgsync") {
 	plugin = NULL;
+	// initialized to "now", so no scheduled sync right after VDR start
+	// use syncOnStart option instead
+	last = time(NULL);
 }
 
 cEpgSyncThread::~cEpgSyncThread() {

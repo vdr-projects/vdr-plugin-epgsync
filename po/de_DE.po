@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.5.7\n"
 "Report-Msgid-Bugs-To: <vdrdev@schmirler.de>\n"
-"POT-Creation-Date: 2013-05-01 00:01+0200\n"
+"POT-Creation-Date: 2014-03-13 10:47+0100\n"
 "PO-Revision-Date: 2009-02-03 11:23+0100\n"
 "Last-Translator: Frank Schmirler <vdrdev@schmirler.de>\n"
 "Language-Team: <vdr@linuxtv.org>\n"
@@ -51,6 +51,9 @@ msgstr "Kanalweise synchronisieren"
 
 msgid "EPG sync on startup"
 msgstr "EPG sync beim Starten"
+
+msgid "EPG sync timeout (h)"
+msgstr "Zeit bis zum EPG sync (h)"
 
 msgid "Map channels by"
 msgstr "Kanäle zuordnen nach"
